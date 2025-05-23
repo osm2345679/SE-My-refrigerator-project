@@ -26,8 +26,8 @@ SE-My-refrigerator-project/
 - Python 3.10
 - Django 5.2
 - MySQL 8.x
-- Gunicorn (현재 미사용 상태)
-- Nginx (현재 미사용 상태)
+- Gunicorn
+- Nginx
 - AWS EC2 (Ubuntu 22.04)
 
 ---
@@ -35,7 +35,7 @@ SE-My-refrigerator-project/
 ## 🖥️ 개발 및 배포 환경
 
 - **로컬 개발**은 `python manage.py runserver` 명령으로 수행합니다.
-- **EC2 서버**에 배포되어 있으며, 현재는 Gunicorn + Nginx 설정이 502 오류로 인해 미완성 상태이고, `runserver` 명령으로 서비스되고 있습니다.
+- **EC2 서버**에 배포되어 있습니다.
 
 ---
 
@@ -86,10 +86,3 @@ python manage.py runserver
 ## 🌐 배포 (현재 상태)
 
 * AWS EC2에 Ubuntu 서버를 이용해 배포
-* Gunicorn + Nginx 구성을 시도했지만 현재는 runserver만으로 서비스 중
-
----
-
-## ⚠️ 주의 사항
-
-* Gunicorn + Nginx 설정은 추후 수정 예정 (502 Bad Gateway 발생)

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ recipe.title }}</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #fdfdfd;
+      padding: 40px;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+    .ingredients, .instructions {
+      margin-bottom: 30px;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+    }
+    .footer a {
+      text-decoration: none;
+      padding: 10px 20px;
+      background-color: #4d5e6b;
+      color: white;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>{{ recipe.title }}</h1>
+
+  <div class="ingredients">
+    <h3>필요한 재료</h3>
+    <ul>
+      {% for ing in recipe.ingredients.all %}
+        <li>{{ ing.name }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="instructions">
+    <h3>만드는 방법</h3>
+    <p>{{ recipe.instructions }}</p>
+  </div>
+
+  <div class="footer">
+    <a href="{% url 'recommend_recipes' %}">← 레시피 목록으로</a>
+  </div>
+</body>
+</html>

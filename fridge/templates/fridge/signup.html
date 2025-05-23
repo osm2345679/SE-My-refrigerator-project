@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>회원가입</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .signup-box {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 300px;
+    }
+    h2 {
+      text-align: center;
+    }
+    form p {
+      margin: 15px 0;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4d5e6b;
+      color: white;
+      border: none;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .errors {
+      color: red;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .errors ul {
+      padding-left: 20px;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-box">
+    <h2>회원가입</h2>
+    <form method="post">
+      {% csrf_token %}
+
+      {% if form.errors %}
+        <div class="errors">
+          <ul>
+            {% for field in form %}
+              {% for error in field.errors %}
+                <li>{{ field.label }}: {{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      {{ form.as_p }}
+      <button type="submit">가입하기</button>
+    </form>
+  </div>
+</body>
+</html>

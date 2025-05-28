@@ -2,78 +2,114 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>회원가입</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: sans-serif;
+      margin: 0;
       background-color: #f4f4f4;
+    }
+
+    .top-bar {
+      position: sticky;
+      top: 0;
+      background-color: #dbe7fd;
+      color: #333;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      padding: 14px 0;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+    }
+
+    .content {
+      padding: 30px 20px;
       display: flex;
       justify-content: center;
-      align-items: center;
-      height: 100vh;
     }
+
     .signup-box {
       background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      width: 300px;
+      padding: 25px 20px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    h2 {
+
+    .signup-box h2 {
       text-align: center;
+      margin-bottom: 20px;
     }
-    form p {
-      margin: 15px 0;
-    }
-    input {
+
+    .signup-box input {
       width: 100%;
-      padding: 10px;
-      margin-top: 5px;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
     }
-    button {
+
+    .signup-box button {
       width: 100%;
-      padding: 10px;
-      background-color: #4d5e6b;
+      padding: 12px;
+      background-color: #4a90e2;
       color: white;
       border: none;
-      margin-top: 10px;
+      font-size: 16px;
       font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
     }
+
+    .signup-box button:hover {
+      background-color: #357ABD;
+    }
+
     .errors {
       color: red;
       font-size: 14px;
       margin-bottom: 10px;
     }
-    .errors ul {
-      padding-left: 20px;
-      margin: 0;
-    }
+
   </style>
 </head>
 <body>
-  <div class="signup-box">
-    <h2>회원가입</h2>
-    <form method="post">
-      {% csrf_token %}
+  <div class="top-bar">우리집 냉장고</div>
 
-      {% if form.errors %}
-        <div class="errors">
-          <ul>
-            {% for field in form %}
-              {% for error in field.errors %}
-                <li>{{ field.label }}: {{ error }}</li>
+  <div class="content">
+    <div class="signup-box">
+      <h2>회원가입</h2>
+      <form method="post">
+        {% csrf_token %}
+
+        {% if form.errors %}
+          <div class="errors">
+            <ul>
+              {% for field in form %}
+                {% for error in field.errors %}
+                  <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
               {% endfor %}
-            {% endfor %}
-            {% for error in form.non_field_errors %}
-              <li>{{ error }}</li>
-            {% endfor %}
-          </ul>
-        </div>
-      {% endif %}
+              {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
 
-      {{ form.as_p }}
-      <button type="submit">가입하기</button>
-    </form>
+        {{ form.as_p }}
+        <button type="submit">가입하기</button>
+      </form>
+    </div>
   </div>
 </body>
 </html>

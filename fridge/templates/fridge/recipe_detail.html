@@ -2,55 +2,98 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ recipe.title }}</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: sans-serif;
+      margin: 0;
       background-color: #fdfdfd;
-      padding: 40px;
-      max-width: 600px;
-      margin: auto;
     }
+
+    .top-bar {
+      position: sticky;
+      top: 0;
+      background-color: #dbe7fd;
+      color: #333;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      padding: 14px 0;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+    }
+
+    .content {
+      padding: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
     h1 {
       text-align: center;
-      font-size: 28px;
-      margin-bottom: 30px;
+      font-size: 24px;
+      margin-bottom: 20px;
     }
-    .ingredients, .instructions {
-      margin-bottom: 30px;
+
+    .ingredients,
+    .instructions {
+      margin-bottom: 24px;
     }
-    .footer {
+
+    .ingredients h3,
+    .instructions h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .ingredients ul {
+      padding-left: 20px;
+    }
+
+    .footer-nav {
       text-align: center;
-      margin-top: 40px;
+      margin-top: 30px;
     }
-    .footer a {
+
+    .footer-nav a {
       text-decoration: none;
       padding: 10px 20px;
-      background-color: #4d5e6b;
+      background-color: #4a90e2;
       color: white;
-      border-radius: 5px;
+      border-radius: 8px;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
-  <h1>{{ recipe.title }}</h1>
+  <div class="top-bar">우리집 냉장고</div>
 
-  <div class="ingredients">
-    <h3>필요한 재료</h3>
-    <ul>
-      {% for ing in recipe.ingredients.all %}
-        <li>{{ ing.name }}</li>
-      {% endfor %}
-    </ul>
-  </div>
+  <div class="content">
+    <h1>{{ recipe.title }}</h1>
 
-  <div class="instructions">
-    <h3>만드는 방법</h3>
-    <p>{{ recipe.instructions }}</p>
-  </div>
+    <div class="ingredients">
+      <h3>필요한 재료</h3>
+      <ul>
+        {% for ing in recipe.ingredients.all %}
+          <li>{{ ing.name }}</li>
+        {% endfor %}
+      </ul>
+    </div>
 
-  <div class="footer">
-    <a href="{% url 'recommend_recipes' %}">← 레시피 목록으로</a>
+    <div class="instructions">
+      <h3>만드는 방법</h3>
+      <p>{{ recipe.instructions }}</p>
+    </div>
+
+    <div class="footer-nav">
+      <a href="{% url 'recommend_recipes' %}">← 레시피 목록으로</a>
+    </div>
   </div>
 </body>
 </html>

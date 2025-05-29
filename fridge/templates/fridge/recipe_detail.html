@@ -5,10 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ recipe.title }}</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       font-family: sans-serif;
       margin: 0;
@@ -19,55 +15,86 @@
       position: sticky;
       top: 0;
       background-color: #dbe7fd;
-      color: #333;
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
       padding: 14px 0;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-      z-index: 100;
+      text-align: center;
+      font-weight: bold;
+      font-size: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
     }
 
     .content {
       padding: 20px;
-      max-width: 600px;
+      max-width: 800px;
       margin: 0 auto;
     }
 
-    h1 {
+    .title-area {
       text-align: center;
-      font-size: 24px;
       margin-bottom: 20px;
     }
 
-    .ingredients,
-    .instructions {
-      margin-bottom: 24px;
+    .title-area img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-top: 10px;
     }
 
-    .ingredients h3,
-    .instructions h3 {
+    .info {
+      margin: 20px 0;
+      background-color: #f0f4ff;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .section h3 {
       font-size: 18px;
       margin-bottom: 10px;
       color: #333;
     }
 
-    .ingredients ul {
-      padding-left: 20px;
+    .section p {
+      font-size: 15px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .step {
+      margin-bottom: 25px;
+    }
+
+    .step img {
+      display: block;
+      width: 100%;
+      max-width: 480px;
+      height: auto;
+      margin: 12px auto;
+      border-radius: 8px;
     }
 
     .footer-nav {
       text-align: center;
-      margin-top: 30px;
+      margin-top: 40px;
     }
 
     .footer-nav a {
-      text-decoration: none;
+      display: inline-block;
       padding: 10px 20px;
       background-color: #4a90e2;
       color: white;
+      text-decoration: none;
       border-radius: 8px;
-      font-size: 14px;
+      font-weight: bold;
+    }
+
+    ul.tip-list {
+      padding-left: 20px;
+      list-style: disc;
     }
   </style>
 </head>
@@ -75,24 +102,53 @@
   <div class="top-bar">우리집 냉장고</div>
 
   <div class="content">
-    <h1>{{ recipe.title }}</h1>
+    <div class="title-area">
+      <h1>{{ recipe.title }}</h1>
+      {% if recipe.main_image %}
+        <img src="{{ recipe.main_image }}" alt="{{ recipe.title }}">
+      {% endif %}
+    </div>
 
-    <div class="ingredients">
+    <div class="info">
+      <strong>조리 방법:</strong> {{ recipe.method }}<br>
+      <strong>요리 종류:</strong> {{ recipe.type }}<br>
+      <strong>중량:</strong> {{ recipe.weight }}g | <strong>칼로리:</strong> {{ recipe.kcal }} kcal<br>
+      <strong>영양 정보:</strong> 탄수화물 {{ recipe.carb }}g / 단백질 {{ recipe.protein }}g / 지방 {{ recipe.fat }}g / 나트륨 {{ recipe.sodium }}mg<br>
+      {% if recipe.hash_tag %}<strong>해시태그:</strong> {{ recipe.hash_tag }}{% endif %}
+    </div>
+
+    <div class="section">
       <h3>필요한 재료</h3>
-      <ul>
-        {% for ing in recipe.ingredients.all %}
-          <li>{{ ing.name }}</li>
-        {% endfor %}
-      </ul>
+      <p>{{ recipe.ingredients_text }}</p>
     </div>
 
-    <div class="instructions">
-      <h3>만드는 방법</h3>
-      <p>{{ recipe.instructions }}</p>
+    <div class="section">
+      <h3>조리 단계</h3>
+      {% for step in recipe.steps.all %}
+        {% if step.description.strip %}
+          <div class="step">
+            <p><strong>Step {{ forloop.counter }} of {{ recipe.steps.count }}:</strong> {{ step.description }}</p>
+            {% if step.image_url %}
+              <img src="{{ step.image_url }}" alt="Step {{ forloop.counter }} 이미지">
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
     </div>
+
+    {% if recipe.tip %}
+      <div class="section">
+        <h3>요리 팁</h3>
+        <ul class="tip-list">
+          {% for tip_line in recipe.tip.splitlines %}
+            <li>{{ tip_line }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
 
     <div class="footer-nav">
-      <a href="{% url 'recommend_recipes' %}">← 레시피 목록으로</a>
+      <a href="{% url 'recommend_recipes' %}">← 추천 레시피로</a>
     </div>
   </div>
 </body>

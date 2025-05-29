@@ -22,12 +22,37 @@ class Ingredient(models.Model):
 
     def __str__(self):
         return self.name
-        
+
 # 레시피
 class Recipe(models.Model):
-    title = models.CharField(max_length=50)
-    instructions = models.TextField()
-    ingredients = models.ManyToManyField(Ingredient)  # 어떤 재료로 만드는지
+    rcp_seq = models.CharField(max_length=10, unique=True)  # RCP_SEQ
+    title = models.CharField(max_length=100)                # RCP_NM
+    method = models.CharField(max_length=30, blank=True)    # RCP_WAY2
+    type = models.CharField(max_length=30, blank=True)      # RCP_PAT2
+    weight = models.CharField(max_length=10, blank=True)    # INFO_WGT
+    kcal = models.CharField(max_length=10, blank=True)      # INFO_ENG
+    carb = models.CharField(max_length=10, blank=True)      # INFO_CAR
+    protein = models.CharField(max_length=10, blank=True)   # INFO_PRO
+    fat = models.CharField(max_length=10, blank=True)       # INFO_FAT
+    sodium = models.CharField(max_length=10, blank=True)    # INFO_NA
+    hash_tag = models.CharField(max_length=100, blank=True) # HASH_TAG
+    main_image = models.URLField(blank=True)                # ATT_FILE_NO_MAIN
+    detail_image = models.URLField(blank=True)              # ATT_FILE_NO_MK
+    ingredients_text = models.TextField(blank=True)         # RCP_PARTS_DTLS
+    tip = models.TextField(blank=True)                      # RCP_NA_TIP
 
     def __str__(self):
         return self.title
+
+# 레시피 설명 및 사진
+class RecipeStep(models.Model):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='steps')
+    order = models.PositiveIntegerField()         # MANUAL01 ~ MANUAL20
+    description = models.TextField(blank=True)    # MANUAL##
+    image_url = models.URLField(blank=True)       # MANUAL_IMG##
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return f"{self.recipe.title} - Step {self.order}"

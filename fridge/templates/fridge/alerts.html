@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>유통기한 알림</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #fdfdfd;
+    }
+    .top-bar {
+      position: sticky;
+      top: 0;
+      background-color: #dbe7fd;
+      color: #333;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      padding: 14px 0;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+    }
+    .content {
+      padding: 20px;
+    }
+    h2 {
+      margin-bottom: 24px;
+      font-size: 24px;
+    }
+    .section {
+      margin-bottom: 40px;
+    }
+    .section h3 {
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+    .card-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      background-color: white;
+      transition: transform 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+    }
+    .expired {
+      border-left: 6px solid #cc0000;
+      background-color: #ffe5e5;
+    }
+    .imminent {
+      border-left: 6px solid #ffcc00;
+      background-color: #fff4cc;
+    }
+    .card p {
+      margin: 6px 0;
+      font-size: 16px;
+    }
+    .no-data {
+      font-size: 16px;
+      color: #555;
+      text-align: center;
+      margin-top: 40px;
+    }
+    .footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      background-color: #f1f1f1;
+      border-top: 1px solid #ccc;
+    }
+    .footer a {
+      flex: 1;
+      padding: 15px;
+      text-align: center;
+      text-decoration: none;
+      color: #000;
+      font-size: 16px;
+      font-weight: bold;
+      border-right: 1px solid #ccc;
+    }
+    .footer a:last-child {
+      border-right: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">우리집 냉장고</div>
+
+  <div class="content">
+    <h2>유통기한 알림</h2>
+
+    {% if expired_items %}
+      <div class="section">
+        <h3>❌ 만료된 식재료</h3>
+        <div class="card-list">
+          {% for item in expired_items %}
+            <div class="card expired">
+              <p><strong>이름:</strong> {{ item.name }}</p>
+              <p><strong>카테고리:</strong> {{ item.category }}</p>
+              <p><strong>유통기한:</strong> {{ item.exp_date|date:"Y년 m월 d일" }}</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if imminent_items %}
+      <div class="section">
+        <h3>⏰ 임밝한 식재료</h3>
+        <div class="card-list">
+          {% for item in imminent_items %}
+            <div class="card imminent">
+              <p><strong>이름:</strong> {{ item.name }}</p>
+              <p><strong>카테고리:</strong> {{ item.category }}</p>
+              <p><strong>유통기한:</strong> {{ item.exp_date|date:"Y년 m월 d일" }}</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if not imminent_items and not expired_items %}
+      <p class="no-data">임밝하거나 만료된 식재료가 없습니다.</p>
+    {% endif %}
+  </div>
+
+  <div class="footer">
+    <a href="/">홈 화면</a>
+    <a href="/add/">식재료 추가</a>
+    <a href="/recipes/">추천 레시피</a>
+  </div>
+</body>
+</html>

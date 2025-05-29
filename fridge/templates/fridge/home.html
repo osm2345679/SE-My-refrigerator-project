@@ -5,69 +5,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>우리집 냉장고</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       font-family: sans-serif;
       margin: 0;
       background-color: #fdfdfd;
     }
-
     .top-bar {
       position: sticky;
       top: 0;
       background-color: #dbe7fd;
       color: #333;
-      text-align: center;
       font-size: 20px;
       font-weight: bold;
       padding: 14px 0;
+      text-align: center;
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
       z-index: 100;
+      position: relative;
     }
-
     .content {
       padding: 20px;
     }
-
     .ingredient-list {
       display: flex;
       justify-content: center;
       gap: 20px;
       flex-wrap: wrap;
     }
-
     .card {
       width: 160px;
-      height: 160px;
-      padding: 20px;
+      padding: 15px;
       border: 2px solid #ccc;
-      border-radius: 16px;
-      background-color: white;
+      border-radius: 15px;
       text-align: center;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      background-color: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-
     .card img {
-      width: 90px;
-      height: 90px;
+      width: 100px;
+      height: 100px;
       object-fit: contain;
     }
-
     .card p {
-      margin-top: 12px;
       font-size: 16px;
       font-weight: bold;
+      margin: 10px 0;
     }
-
+    .delete-btn {
+      margin-top: 10px;
+      padding: 6px 12px;
+      font-size: 14px;
+      background-color: #999;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
     .no-data {
       text-align: center;
       margin-top: 40px;
       font-size: 16px;
     }
-
     .footer {
       position: fixed;
       bottom: 0;
@@ -77,7 +79,6 @@
       background-color: #f1f1f1;
       border-top: 1px solid #ccc;
     }
-
     .footer a {
       flex: 1;
       padding: 15px;
@@ -88,36 +89,132 @@
       font-weight: bold;
       border-right: 1px solid #ccc;
     }
-
     .footer a:last-child {
       border-right: none;
     }
-
-    .logout-button {
+    .logout-wrapper {
       position: absolute;
-      right: 20px;
+      right: 10px;
       top: 50%;
       transform: translateY(-50%);
+    }
+    .logout-button {
       font-size: 14px;
-      padding: 8px 12px;
+      padding: 6px 12px;
       background-color: #4d5e6b;
       color: white;
-      text-decoration: none;
-      border-radius: 5px;
       border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .alert-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 20px;
+      margin: 30px 20px 40px;
+      border-left: 6px solid;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      gap: 12px;
+    }
+    .alert-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 200px;
+    }
+    .alert-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .alert-imminent {
+      background-color: #fff4cc;
+      color: #8a6d00;
+      border-color: #ffcc00;
+    }
+    .alert-expired {
+      background-color: #ffe5e5;
+      color: #cc0000;
+      border-color: #cc0000;
+    }
+    .alert-action {
+      padding: 6px 14px;
+      font-size: 14px;
+      background-color: #6fa4ff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .alert-close {
+      background: none;
+      border: none;
+      font-size: 18px;
+      font-weight: bold;
+      color: #888;
+      cursor: pointer;
+    }
+    .soft-blue-btn {
+      background-color: #6fa4ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .gray-btn {
+      background-color: #999;
     }
   </style>
 </head>
 <body>
   <div class="top-bar">
     우리집 냉장고
-    <form action="/logout/" method="POST" style="position: absolute; right: 10px; top: 10px;">
-      {% csrf_token %}
-      <button type="submit" class="logout-button">로그아웃</button>
-    </form>
+    <div class="logout-wrapper">
+      <form action="/logout/" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="logout-button">로그아웃</button>
+      </form>
+    </div>
   </div>
 
   <div class="content">
+    {% if expired_items or imminent_items %}
+      <div class="alerts">
+        {% if expired_items %}
+          <div class="alert-box alert-expired" id="expiredAlert">
+            <div class="alert-content">
+              <span style="font-size: 22px;">❌</span>
+              <span>유통기한이 지난 식재료가 {{ expired_items|length }}개 있습니다.</span>
+            </div>
+            <div class="alert-actions">
+              <button class="alert-action" onclick="location.href='/alerts/'">확인하기</button>
+              <button class="alert-close" onclick="closeAlert('expiredAlert')">X</button>
+            </div>
+          </div>
+        {% endif %}
+        {% if imminent_items %}
+          <div class="alert-box alert-imminent" id="imminentAlert">
+            <div class="alert-content">
+              <span style="font-size: 22px;">⏰</span>
+              <span>유통기한이 임박한 식재료가 {{ imminent_items|length }}개 있습니다.</span>
+            </div>
+            <div class="alert-actions">
+              <button class="alert-action" onclick="location.href='/alerts/'">확인하기</button>
+              <button class="alert-close" onclick="closeAlert('imminentAlert')">X</button>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
     {% if my_ingredients %}
       <div class="ingredient-list">
         {% for item in my_ingredients %}
@@ -126,6 +223,10 @@
               <img src="{{ item.image_url }}" alt="{{ item.name }}">
             {% endif %}
             <p>{{ item.name }}</p>
+            <form method="POST" action="{% url 'delete_ingredient' item.id %}" style="margin-top: 10px;">
+              {% csrf_token %}
+              <button type="submit" class="soft-blue-btn gray-btn delete-btn">삭제</button>
+            </form>
           </div>
         {% endfor %}
       </div>
@@ -139,5 +240,14 @@
     <a href="/add/">식재료 추가</a>
     <a href="/recipes/">추천 레시피</a>
   </div>
+
+  <script>
+    function closeAlert(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.display = 'none';
+      }
+    }
+  </script>
 </body>
 </html>

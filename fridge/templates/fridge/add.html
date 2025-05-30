@@ -126,6 +126,23 @@
 	  font-size: 14px;
 	  border-radius: 6px;
 	}
+	
+	.type-buttons a.active {
+		color: white;
+		background-color: #6fa4ff;
+		padding: 6px 12px;
+		border-radius: 8px;
+		font-weight: bold;
+		text-decoration: none;
+	}
+
+	.type-buttons a.inactive {
+		color: #333;
+		background-color: #e0e0e0;
+		padding: 6px 12px;
+		border-radius: 8px;
+		text-decoration: none;
+	}
 
   </style>
 </head>
@@ -137,6 +154,20 @@
       <input type="text" name="q" placeholder="식재료 검색" value="{{ query }}">
       <button type="submit" class="soft-blue-btn">검색</button>
     </form>
+
+	<!-- 카테고리 필터 버튼 -->
+	{% if categories %}
+	  <div class="type-buttons" style="text-align: center; margin: 20px 0;">
+		<a href="?q={{ query }}" class="{% if not selected_category %}active{% else %}inactive{% endif %}" style="margin: 0 10px;">전체</a>
+		{% for cat in categories %}
+		  <a href="?q={{ query }}&category={{ cat|urlencode }}" class="{% if selected_category == cat %}active{% else %}inactive{% endif %}" style="margin: 0 10px;">
+			{{ cat }}
+		  </a>
+		{% endfor %}
+	  </div>
+	{% endif %}
+
+
 
     <div class="ingredient-list">
       {% for item in ingredients %}

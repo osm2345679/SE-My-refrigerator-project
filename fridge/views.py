@@ -38,7 +38,12 @@ def signup_view(request):
 @login_required
 def fridge_view(request):
     today = date.today()
+    selected_category = request.GET.get("category", "")
+
     items = IngredientItem.objects.filter(user=request.user)
+
+    if selected_category:
+        items = items.filter(category=selected_category)
 
     imminent_items = []
     expired_items = []
@@ -49,22 +54,39 @@ def fridge_view(request):
         elif today <= item.exp_date <= today + timedelta(days=3):
             imminent_items.append(item)
 
+    categories = IngredientItem.objects.filter(user=request.user).values_list("category", flat=True).distinct()
+
     return render(request, 'fridge/home.html', {
         'my_ingredients': items,
         'expired_items': expired_items,
-        'imminent_items': imminent_items
+        'imminent_items': imminent_items,
+        'categories': categories,
+        'selected_category': selected_category
     })
+
 
     
 @login_required
 def ingredient_search(request):
     query = request.GET.get('q', '')
-    ingredients = Ingredient.objects.filter(name__icontains=query) if query else Ingredient.objects.all()
+    selected_category = request.GET.get('category', '')
+
+    ingredients = Ingredient.objects.all()
+
+    if query:
+        ingredients = ingredients.filter(name__icontains=query)
+    if selected_category:
+        ingredients = ingredients.filter(category=selected_category)
+
+    categories = Ingredient.objects.values_list("category", flat=True).distinct()
 
     return render(request, 'fridge/add.html', {
         'ingredients': ingredients,
-        'query': query
+        'query': query,
+        'categories': categories,
+        'selected_category': selected_category
     })
+
     
 @csrf_exempt
 @login_required

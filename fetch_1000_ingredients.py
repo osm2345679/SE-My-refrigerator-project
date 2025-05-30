@@ -6,7 +6,7 @@ import time
 API_KEY = "tAa+IHbWJZWTpatZo2Yujio/4JUEYL14nBSAhWDuiJnERdfDl2p/peXDw/BQJZEVUoCxWugMKH1wyRr2qKcuMQ=="
 API_URL = "http://apis.data.go.kr/1390802/AgriFood/FdFoodImage/getKoreanFoodFdFoodImageList"
 
-def fetch_food_data_xml(start_page=1, page_interval=1, count=200, page_size=20):
+def fetch_food_data_xml(start_page=149, page_interval=1, count=20, page_size=20):
     all_items = []
     unique_keys = set()  # (식재료명, 식품분류) 중복 제거용
 
@@ -40,8 +40,8 @@ def fetch_food_data_xml(start_page=1, page_interval=1, count=200, page_size=20):
                 group = food.findtext("nation_Std_Food_Grupp_Code_Nm", default="").strip()
 
                 key = (name, group)
-                if key in unique_keys:
-                    continue  # 중복이면 스킵
+                #if key in unique_keys:
+                #    continue  # 중복이면 스킵
                 unique_keys.add(key)
 
                 all_items.append({
